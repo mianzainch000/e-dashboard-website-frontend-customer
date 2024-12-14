@@ -1,6 +1,6 @@
 import config from "../../api/config";
+import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { getProducts } from "../../api/endPoint";
 import React, { useState, useEffect } from "react";
 import { useSnackbar } from "../../components/Snackbar";
@@ -16,7 +16,6 @@ import {
 
 const Home = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const snackBarMessage = useSnackbar();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +69,7 @@ const Home = () => {
                 sx={{
                   m: 2,
                   display: "flex",
-                  maxWidth: "300px",
+                  width: "300px",
                   flexDirection: "column",
                   color: "var(--text-dark)",
                   border: "1px solid white",
@@ -98,14 +97,19 @@ const Home = () => {
                     justifyContent="center"
                     flexDirection={"column"}
                   >
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      sx={{ width: "100%", textTransform: "none" }}
-                      onClick={() => navigate(`/detail/${product._id}`)}
+                    <NavLink
+                      to={{
+                        pathname: `/detail/${product._id}`,
+                      }}
                     >
-                      {t("VIEW_DETAIL")}
-                    </Button>
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        sx={{ width: "100%", textTransform: "none" }}
+                      >
+                        {t("VIEW_DETAIL")}
+                      </Button>
+                    </NavLink>
                   </Box>
                 </CardContent>
               </Card>

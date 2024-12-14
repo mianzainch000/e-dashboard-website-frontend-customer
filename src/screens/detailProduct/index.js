@@ -236,7 +236,7 @@ const ProductDetailCard = () => {
               );
               snackBarMessage({
                 type: "success",
-                message: "Product added to cart successfully!",
+                message: t("PRODUCT_ADDED_SUCCESSFULLY"),
               });
             }}
             startIcon={<AddShoppingCartIcon />}
