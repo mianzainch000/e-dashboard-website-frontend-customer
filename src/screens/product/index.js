@@ -1,4 +1,5 @@
 import config from "../../api/config";
+import logo from "../../Images/logo.png";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getProducts } from "../../api/endPoint";
@@ -84,6 +85,9 @@ const Home = () => {
                   component={"img"}
                   src={`${config.baseURL}uploads/${product.image[0]}`}
                   alt={product.name}
+                  onError={(e) => {
+                    e.target.src = logo; // Set default logo image on error
+                  }}
                   sx={{ height: 300 }}
                 />
                 <CardContent>

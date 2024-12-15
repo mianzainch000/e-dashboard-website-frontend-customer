@@ -24,7 +24,7 @@ const LanguageSelector = () => {
 
   // On component mount, check if a language is saved in cookies
   useEffect(() => {
-    const savedLanguage = Cookies.get("language") || "en"; // Default to 'en' if no language is saved
+    const savedLanguage = Cookies.get("languageCustomerSide") || "en"; // Default to 'en' if no language is saved
     setSelectedLanguage(savedLanguage);
     i18n.changeLanguage(savedLanguage); // Change language using i18n
   }, [i18n]);
@@ -43,7 +43,7 @@ const LanguageSelector = () => {
   const handleLanguageChange = (newLanguage) => {
     i18n.changeLanguage(newLanguage); // Change language using i18n
     setSelectedLanguage(newLanguage);
-    Cookies.set("language", newLanguage, { expires: 365 }); // Set cookie to expire in one year
+    Cookies.set("languageCustomerSide", newLanguage, { expires: 365 }); // Set cookie to expire in one year
     handleLanguageMenuClose();
   };
 
@@ -52,7 +52,7 @@ const LanguageSelector = () => {
     const newLanguage = event.target.value;
     i18n.changeLanguage(newLanguage); // Change language using i18n
     setSelectedLanguage(newLanguage);
-    Cookies.set("language", newLanguage, { expires: 365 }); // Save the language in cookies for one year
+    Cookies.set("languageCustomerSide", newLanguage, { expires: 365 }); // Save the language in cookies for one year
   };
 
   return (

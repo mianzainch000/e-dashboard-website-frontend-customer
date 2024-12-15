@@ -19,7 +19,7 @@ const ThemeToggle = () => {
   const [themeMode, setThemeMode] = useState("light");
 
   useEffect(() => {
-    const savedTheme = Cookies.get("themes") || "light";
+    const savedTheme = Cookies.get("themesCustomerSide") || "light";
     setThemeMode(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);
@@ -29,7 +29,7 @@ const ThemeToggle = () => {
       event.target.value || (themeMode === "light" ? "dark" : "light");
     setThemeMode(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
-    Cookies.set("themes", newTheme, { expires: 365 });
+    Cookies.set("themesCustomerSide", newTheme, { expires: 365 });
   };
 
   return (

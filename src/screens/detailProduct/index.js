@@ -1,10 +1,11 @@
 import config from "../../api/config";
-import { useDispatch } from "react-redux";
+import logo from "../../Images/logo.png";
 import { useParams } from "react-router-dom";
 import { addToCart } from "../../redux/slice";
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
 import { getProductById } from "../../api/endPoint";
+import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "../../components/Snackbar";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {
@@ -23,10 +24,12 @@ const ProductDetailCard = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const snackBarMessage = useSnackbar();
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState("");
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const { cart } = useSelector((state) => state.allCart);
 
   const getData = async () => {
     try {
@@ -36,7 +39,7 @@ const ProductDetailCard = () => {
         setMainImage(
           res.data?.image?.length > 0
             ? `${config.baseURL}uploads/${res.data.image[0]}`
-            : "/default-image.jpg"
+            : logo
         );
       } else {
         snackBarMessage({ type: "error", message: t("FETCH_ERROR") });
@@ -54,9 +57,6 @@ const ProductDetailCard = () => {
   useEffect(() => {
     getData();
   }, [id]);
-  useEffect(() => {
-    getData();
-  });
 
   if (loading) {
     return (
@@ -90,8 +90,53 @@ const ProductDetailCard = () => {
     );
   }
 
+  const stockValue =
+    product.stock[selectedImageIndex] -
+    (cart
+      .filter((item) => item.id === id && item.image === mainImage)
+      .reduce((acc, item) => acc + item.quantity, 0) || 0);
+
   const totalPrice = count * product.price;
 
+  const handleIncrement = () => {
+    if (count < stockValue) {
+      setCount(count + 1);
+    } else {
+      snackBarMessage({
+        type: "error",
+        message: t("STOCK_NOT_AVAILABLE"),
+      });
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (count <= stockValue) {
+      dispatch(
+        addToCart({
+          ...product,
+          quantity: count,
+          image: mainImage,
+          id,
+        })
+      );
+      snackBarMessage({
+        type: "success",
+        message: t("PRODUCT_ADDED_SUCCESSFULLY"),
+      });
+      setCount(0);
+    } else {
+      snackBarMessage({
+        type: "error",
+        message: t("STOCK_NOT_AVAILABLE"),
+      });
+    }
+  };
+
+  const handleImageSelect = (img, index) => {
+    setMainImage(`${config.baseURL}uploads/${img}`);
+    setSelectedImageIndex(index);
+    setCount(0);
+  };
   return (
     <Grid
       container
@@ -120,6 +165,9 @@ const ProductDetailCard = () => {
           component="img"
           src={mainImage}
           alt={product.name || "Product Image"}
+          onError={(e) => {
+            e.target.src = logo; // Set default logo image on error
+          }}
           sx={{
             width: { xs: "100%", sm: "30%" },
             height: { xs: 200, sm: 300 },
@@ -157,16 +205,12 @@ const ProductDetailCard = () => {
               <Button
                 variant="outlined"
                 size="small"
-                onClick={() => setCount((prev) => Math.max(prev - 1, 1))}
+                onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
               >
                 -
               </Button>
               <Typography>{count}</Typography>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setCount((prev) => prev + 1)}
-              >
+              <Button variant="outlined" size="small" onClick={handleIncrement}>
                 +
               </Button>
             </Box>
@@ -200,6 +244,9 @@ const ProductDetailCard = () => {
                 component="img"
                 src={`${config.baseURL}uploads/${img}`}
                 alt={`Product Image ${index + 1}`}
+                onError={(e) => {
+                  e.target.src = logo; // Set default logo image on error
+                }}
                 sx={{
                   width: 60,
                   height: 60,
@@ -210,7 +257,7 @@ const ProductDetailCard = () => {
                     border: "2px solid var(--primary-color)",
                   },
                 }}
-                onClick={() => setMainImage(`${config.baseURL}uploads/${img}`)}
+                onClick={() => handleImageSelect(img, index)}
               />
             ))}
           </Box>
@@ -225,20 +272,7 @@ const ProductDetailCard = () => {
               textTransform: "none",
               width: { xs: "100%", sm: "50%" },
             }}
-            onClick={() => {
-              dispatch(
-                addToCart({
-                  ...product,
-                  quantity: count,
-                  image: mainImage,
-                  id,
-                })
-              );
-              snackBarMessage({
-                type: "success",
-                message: t("PRODUCT_ADDED_SUCCESSFULLY"),
-              });
-            }}
+            onClick={handleAddToCart}
             startIcon={<AddShoppingCartIcon />}
           >
             {t("ADD_TO_CART")}
