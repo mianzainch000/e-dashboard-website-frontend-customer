@@ -5,6 +5,8 @@ import Layout from "../components/Layout";
 import Product from "../screens/product";
 import CartPage from "../screens/addToCart";
 import AddressPage from "../screens/userAddress";
+import ResetPassword from "../screens/resetPassword";
+import ForgotPassword from "../screens/forgotPassword";
 import ProductDetailCard from "../screens/detailProduct";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PublicRoute from "../components/ProtectedRoutes/PublicRoute";
@@ -20,6 +22,8 @@ export const Router = () => {
             <Route element={<Layout />}>
               <Route path="/" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgotPassword" element={<ForgotPassword />} />
+              <Route path="/resetPassword" element={<ResetPassword />} />
             </Route>
           </Route>
 
@@ -30,7 +34,6 @@ export const Router = () => {
               <Route path="/detail/:id" element={<ProductDetailCard />} />
               <Route path="/addTOCart" element={<CartPage />} />
               <Route path="/address" element={<AddressPage />} />
-              AddressPage
             </Route>
           </Route>
         </Routes>

@@ -29,6 +29,47 @@ export const signupFormValidation = (t) => {
   });
 };
 
+export const forgotFormValidation = (t) => {
+  return Yup.object({
+    email: Yup.string()
+      .required(t("EMAIL_REQUIRED"))
+      .matches(/\S+@\S+\.\S+/, t("INVALID_EMAIL")),
+  });
+};
+
+export const resetFormValidation = (t) => {
+  return Yup.object({
+    password: Yup.string()
+      .required(t("PASSWORD_REQUIRED"))
+      .min(8, t("PASSWORD_MIN_LENGTH"))
+      .matches(/[a-z]/, t("PASSWORD_LOWERCASE"))
+      .matches(/[A-Z]/, t("PASSWORD_UPPERCASE"))
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, t("PASSWORD_SYMBOL")),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], t("CONFIRM_PASSWORD_MATCH"))
+      .required(t("CONFIRM_PASSWORD_REQUIRED")),
+  });
+};
+
+export const productFormValidation = (t) => {
+  return Yup.object({
+    name: Yup.string().required(t("NAME_REQUIRED")),
+    price: Yup.number()
+      .required(t("PRICE_REQUIRED"))
+      .positive(t("PRICE_POSITIVE")),
+    description: Yup.string().required(t("DESCRIPTION_REQUIRED")),
+    images: Yup.array()
+      .of(
+        Yup.object().shape({
+          url: Yup.string().required(t("IMAGE_REQUIRED")),
+          file: Yup.mixed(),
+        })
+      )
+      .min(1, t("AT_LEAST_ONE_IMAGE_REQUIRED")),
+    stock: Yup.array().of(Yup.string().required(t("STOCK_REQUIRED"))),
+  });
+};
+
 export const userAddressValidation = (t) => {
   return Yup.object({
     name: Yup.string().required(t("NAME_IS_REQUIRED")),
@@ -48,6 +89,9 @@ export const useValidationSchemas = () => {
   return {
     loginFormValidation: loginFormValidation(t),
     signupFormValidation: signupFormValidation(t),
+    forgotFormValidation: forgotFormValidation(t),
+    resetFormValidation: resetFormValidation(t),
+    productFormValidation: productFormValidation(t),
     userAddressValidation: userAddressValidation(t),
   };
 };

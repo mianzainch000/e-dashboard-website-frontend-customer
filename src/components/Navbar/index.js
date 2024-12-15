@@ -25,19 +25,19 @@ import {
 const Navbar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const snackBarMessage = useSnackbar();
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
+  const isAuthenticated = !!Cookies.get("token");
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const isAuthenticated = !!Cookies.get("token"); // Check if token exists
 
   const handleLogout = async () => {
     setLoading(true);
     try {
       Cookies.remove("token");
       snackBarMessage({
-        message: "Logout Successfully",
+        message: t("LOGOUT_SUCCESSFULLY"),
         type: "success",
       });
       navigate("/");
@@ -79,18 +79,8 @@ const Navbar = () => {
               <DrawerComp />
             ) : (
               <Stack direction="row" spacing={2}>
-                {!isAuthenticated && (
+                {!isAuthenticated ? (
                   <>
-                    <Button className={styles.button}>
-                      <NavLink to="/" className={styles.button}>
-                        {t("LOGIN")}
-                      </NavLink>
-                    </Button>
-                    <Button className={styles.button}>
-                      <NavLink to="/signup" className={styles.button}>
-                        {t("SIGNUP")}
-                      </NavLink>
-                    </Button>
                     <Button>
                       <LanguageSelector />
                     </Button>
@@ -98,9 +88,13 @@ const Navbar = () => {
                       <ThemeToggle />
                     </Button>
                   </>
-                )}
-                {isAuthenticated && (
+                ) : (
                   <>
+                    <Button className={styles.button}>
+                      <NavLink to="/addProduct" className={styles.button}>
+                        {t("ADD_PRODUCT")}
+                      </NavLink>
+                    </Button>
                     <Button className={styles.button}>
                       <NavLink to="/home" className={styles.button}>
                         {t("PRODUCT")}

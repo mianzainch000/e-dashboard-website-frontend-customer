@@ -72,15 +72,15 @@ const Signup = () => {
       if (res?.status === 201) {
         snackBarMessage({
           type: "success",
-          // message: res?.data?.message,
-          message: t("ACCOUNT_CREATED_SUCCESSFULLY"),
+          message: res?.data?.message,
+          // message: t("ACCOUNT_CREATED_SUCCESSFULLY"),
         });
         formik.handleReset();
       } else {
         snackBarMessage({
           type: "error",
-          // message: res?.data?.message,
-          message: t("EMAIL_ALREADY_IN_USE"),
+          message: res?.data?.message,
+          // message: t("EMAIL_ALREADY_IN_USE"),
         });
       }
     } catch (error) {
@@ -114,7 +114,12 @@ const Signup = () => {
       <Grid lg={6} md={6} sm={6} xs={12}>
         <Box
           sx={{
-            height: "100vh",
+            height: {
+              lg: "85vh",
+              md: "80vh",
+              sm: "80vh",
+              xs: "100vh",
+            },
           }}
           className={styles.centeredContainer}
         >
@@ -307,8 +312,8 @@ const Signup = () => {
               </Grid>
               <Grid item>
                 <NavLink to="/" variant="body2">
-                  <Typography className={styles.alreadyAccount}>
-                    {t("ALREADY_ACOOUNT")}
+                  <Typography className={styles.goBackToLogin}>
+                    {t("GO_BACK_TO_LOGIN")}
                   </Typography>
                 </NavLink>
               </Grid>
