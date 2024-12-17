@@ -110,6 +110,13 @@ const ProductDetailCard = () => {
   };
 
   const handleAddToCart = () => {
+    if (count === 0) {
+      snackBarMessage({
+        type: "error",
+        message: t("AT_LEAST_ONE_PRODUCT_MUST_BE_ADDED"),
+      });
+      return;
+    }
     if (count <= stockValue) {
       dispatch(
         addToCart({
