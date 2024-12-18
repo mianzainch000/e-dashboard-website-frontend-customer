@@ -1,10 +1,10 @@
-import config from "../../api/config";
-import logo from "../../Images/logo.png";
+import config from "../../../api/config";
 import { NavLink } from "react-router-dom";
+import logo from "../../../Images/logo.png";
 import { useTranslation } from "react-i18next";
-import { getProducts } from "../../api/endPoint";
 import React, { useState, useEffect } from "react";
-import { useSnackbar } from "../../components/Snackbar";
+import { getProducts } from "../../../api/endPoint";
+import { useSnackbar } from "../../../components/Snackbar";
 import {
   Box,
   Card,
@@ -103,7 +103,7 @@ const Home = () => {
                   >
                     <NavLink
                       to={{
-                        pathname: `/detail/${product._id}`,
+                        pathname: `/home/detail/${product._id}`,
                       }}
                     >
                       <Button

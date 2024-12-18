@@ -1,12 +1,12 @@
-import config from "../../api/config";
-import logo from "../../Images/logo.png";
-import { useParams } from "react-router-dom";
-import { addToCart } from "../../redux/slice";
+import config from "../../../api/config";
+import logo from "../../../Images/logo.png";
+import { addToCart } from "../../../redux/slice";
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
-import { getProductById } from "../../api/endPoint";
+import { getProductById } from "../../../api/endPoint";
 import { useDispatch, useSelector } from "react-redux";
-import { useSnackbar } from "../../components/Snackbar";
+import { useSnackbar } from "../../../components/Snackbar";
+import { useParams, useNavigate } from "react-router-dom";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {
   Card,
@@ -22,6 +22,7 @@ import {
 const ProductDetailCard = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const snackBarMessage = useSnackbar();
   const [count, setCount] = useState(0);
@@ -45,10 +46,7 @@ const ProductDetailCard = () => {
         snackBarMessage({ type: "error", message: t("FETCH_ERROR") });
       }
     } catch (error) {
-      snackBarMessage({
-        type: "error",
-        message: t("FETCH_ERROR"),
-      });
+      snackBarMessage({ type: "error", message: t("FETCH_ERROR") });
     } finally {
       setLoading(false);
     }
@@ -117,6 +115,7 @@ const ProductDetailCard = () => {
       });
       return;
     }
+
     if (count <= stockValue) {
       dispatch(
         addToCart({
@@ -144,6 +143,7 @@ const ProductDetailCard = () => {
     setSelectedImageIndex(index);
     setCount(0);
   };
+
   return (
     <Grid
       container
@@ -173,7 +173,7 @@ const ProductDetailCard = () => {
           src={mainImage}
           alt={product.name || "Product Image"}
           onError={(e) => {
-            e.target.src = logo; // Set default logo image on error
+            e.target.src = logo;
           }}
           sx={{
             width: { xs: "100%", sm: "30%" },
@@ -197,7 +197,7 @@ const ProductDetailCard = () => {
           </Typography>
           <br />
           <Typography variant="h5">
-            {t("DESCRIPTION")}:{product.description}
+            {t("DESCRIPTION")}: {product.description}
           </Typography>
 
           <Box
@@ -224,18 +224,15 @@ const ProductDetailCard = () => {
 
             <Typography
               variant="h5"
-              sx={{ mt: { xs: 2, sm: 0 }, textAlign: "center" }}
+              sx={{
+                mt: { xs: 2, sm: "-50px", md: "-50px", lg: "-100px" },
+                textAlign: "center",
+              }}
             >
               {t("TOTAL_PRICE")}: {totalPrice} Rs
             </Typography>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "1px",
-            }}
-          ></Box>
+
           <Box
             display="flex"
             gap={2}
@@ -252,7 +249,7 @@ const ProductDetailCard = () => {
                 src={`${config.baseURL}uploads/${img}`}
                 alt={`Product Image ${index + 1}`}
                 onError={(e) => {
-                  e.target.src = logo; // Set default logo image on error
+                  e.target.src = logo;
                 }}
                 sx={{
                   width: 60,

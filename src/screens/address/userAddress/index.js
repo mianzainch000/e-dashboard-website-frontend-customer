@@ -2,12 +2,12 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useTranslation } from "react-i18next";
-import { UserAdress } from "../../api/endPoint";
-import TextInput from "../../components/TextInput";
+import { UserAdress } from "../../../api/endPoint";
+import TextInput from "../../../components/TextInput";
 import { Grid, Typography, Box } from "@mui/material";
-import { useSnackbar } from "../../components/Snackbar";
-import CustomButton from "../../components/CustomButton";
-import { useValidationSchemas } from "../../components/Validation";
+import { useSnackbar } from "../../../components/Snackbar";
+import CustomButton from "../../../components/CustomButton";
+import { useValidationSchemas } from "../../../components/Validation";
 
 const AddressPage = () => {
   const { t } = useTranslation();
@@ -41,7 +41,8 @@ const AddressPage = () => {
       if (res?.status === 201) {
         snackBarMessage({
           type: "success",
-          message: res?.data?.message,
+          // message: res?.data?.message,
+          message: t("ADDRESS_ADDED_SUCCESSFULLY"),
         });
         formik.handleReset();
       } else {
